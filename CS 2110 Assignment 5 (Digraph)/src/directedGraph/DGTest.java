@@ -1,5 +1,6 @@
 //1 2 3; 2 3 4; 8 9 1; 8 2 2;
-
+//1 2 3; 1 3 3; 2 3 2; 2 4 3; 3 5 2; 4 5 4; 5 6 3; 4 6 2;
+//Flow 5
 
 package directedGraph;
 
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class DGTest {
 
@@ -51,8 +53,9 @@ public class DGTest {
 		
 		System.out.println(g);
 		
-		ArrayList<Edge> path =new ArrayList<Edge>();
-		System.out.println(g.getPath(g.vertices().get("1"), g.vertices().get("6"), path));
+		HashMap<Edge,Integer> flow = g.getPath(g.vertices().get("1"),g.vertices().get("6"));
+		System.out.println(flow);
+		//System.out.println(g.maxFlow(flow, g.vertices().get("1")));
 		
 	}//End Main method
 	

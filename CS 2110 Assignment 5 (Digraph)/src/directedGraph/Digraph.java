@@ -4,13 +4,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 public class Digraph {
 
 	private HashMap<String,Vertex> vertices;
+	private LinkedList<Edge> edges;
 	
 	public Digraph(){
 		vertices = new HashMap<String,Vertex>();
+		edges = new LinkedList<Edge>();
 	}
 	
 	public void addEdge(String tail,String tip,String weight) {
@@ -32,34 +35,97 @@ public class Digraph {
 		}//End else
 		int w=Integer.parseInt(weight);
 		Edge e = new Edge(tailV,tipV,w);//Create new edge
+		edges.add(e);
 	}//End addEdge
 	
-	public void maxFlow(Vertex start, Vertex end) {
-		ArrayList<Edge> path = getPath(start,end,null);
-		while(path!=null) {
-			
-		}//end while
-	}
+	public int maxFlow(HashMap<Edge,Integer> flow, Vertex start) {
+		int maxFlow= 0;
+		for (int i=0;i<start.edges().size();i++) {
+			maxFlow += flow.get(start.edges().get(i));
+		}//end for
+		return maxFlow;
+	}//End maxFlow method
 	
-	public ArrayList<Edge> getPath(Vertex start,Vertex end,ArrayList<Edge> path){
-		System.out.println(start.equals(end));
-		if (start.equals(end)) return path;
-		int residual;//For finding remaining capacity
-		int flow = 0;//Flow begins at 0
-		for (int i=0; i<start.edges().size();i++) {
-			residual = start.edges().get(i).weight() - flow;
-			System.out.println(residual);
-			if (residual>0 && !path.contains(start.edges().get(i))){
-				ArrayList<Edge> result = getPath(start.edges().get(i).tip(),end,path);
-				if (result != null) {
-					path.add(start.edges().get(i));
-					return result;
-				}
-			}//End if
+	public HashMap<Edge, Integer> getPath(Vertex start,Vertex end){
+	System.out.println(start);
+	System.out.println(end);
+		LinkedList<Edge> path;//Keeps track of path being followed
+		HashMap<Edge, Integer> flow = new HashMap<Edge,Integer>();//Keeps track of how much capacity has been used
+		//if (start.equals(end)) return path;
+		for(Edge e:edges) {
+			flow.put(e,0);
+	System.out.println("in for");
 		}//End for
-		return null;
-			
+	System.out.println("did for");
+		while ((path = bfSearch(start,end,flow)) != null) {
+			System.out.println(path);
+			int minCapacity = Integer.MAX_VALUE;
+			Vertex lastNode = start;
+	//System.out.println("in while");
+			for (Edge edge : path) {
+				int c;
+				if (edge.tail().equals(lastNode)) {
+					c=edge.weight() - flow.get(edge);
+					lastNode=edge.tip();
+				} else {
+					c=flow.get(edge);
+					lastNode= edge.tail();
+				}//end if else
+				if (c<minCapacity) {
+					minCapacity=c;
+				}//end if
+			}//End for
+		}//End while
+	System.out.println("out while");
+		return flow;
 	}//End getPath
+	
+	public LinkedList<Edge> bfSearch(Vertex start,Vertex end, HashMap<Edge,Integer> flow) {
+		HashMap<Vertex,Edge> parent = new HashMap<Vertex,Edge>();
+		LinkedList<Vertex> siblings = new LinkedList<Vertex>();
+	System.out.println("Search");
+		parent.put(start, null);
+		siblings.add(start);
+		all: while(!siblings.isEmpty()) {
+			LinkedList<Vertex> newSibling = new LinkedList<Vertex>();
+			for(Vertex vertexID : siblings) {
+				for(int i=0;i<vertexID.edges().size();i++){
+					Edge e = vertexID.edges().get(i);
+					if (e.tail().equals(vertexID) && !parent.containsKey(e.tip()) && flow.get(e) < e.weight()) {
+						parent.put(e.tip(), e);
+						if (e.tip().equals(end)) {
+							break all;
+						}//End if
+						newSibling.add(e.tip());
+					}//End if
+					else if (e.tip().equals(vertexID) && parent.containsKey(e.tail()) && flow.get(e) > 0) {
+						parent.put(e.tail(), e);
+						if (e.tail().equals(end)) {
+							break all;
+						}//end if
+						newSibling.add(e.tail());
+					}//end else if
+				}//End for
+			}///End for
+			siblings = newSibling;
+		}//End while
+		if (siblings.isEmpty()) {
+			return null;
+		}//End if
+		
+		Vertex node = end;
+		LinkedList<Edge> path = new LinkedList<Edge>();
+		while (!node.equals(start)) {
+			Edge e = parent.get(node);
+			path.addFirst(e);
+			if (e.tail().equals(node)) {
+				node= e.tip();
+			} else {
+				node= e.tail();
+			}//End if else
+		}//End while
+		return path;
+	}//End BFSearch
 	
 	public HashMap<String,Vertex> vertices(){
 		return vertices;

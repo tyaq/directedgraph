@@ -31,6 +31,10 @@ public class Edge {
 		return tip;
 	}
 	
+	public Vertex tail(){
+		return tail;
+	}
+	
 	public String toString(){
 		return "["+tail+"->"+tip+" Weight:"+weight+"]";
 	}
