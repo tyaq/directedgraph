@@ -13,7 +13,6 @@ public class Vertex {
 	}//End constructor
 	
 	public void add(Edge v){
-		System.out.println(v);
 		if (edges != null && edges.contains(v) ) return;
 		edges.add(v);
 	}//End add method

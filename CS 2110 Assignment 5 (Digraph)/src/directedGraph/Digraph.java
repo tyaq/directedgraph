@@ -38,27 +38,47 @@ public class Digraph {
 		edges.add(e);
 	}//End addEdge
 	
-	public int maxFlow(HashMap<Edge,Integer> flow, Vertex start) {
+	public int maxFlow(Object start,Object end) {
+		start=start.toString();
+		end=end.toString();
+		HashMap<Edge,Integer> flow = getFlow(vertices().get(start),vertices().get(end));
+		return maxFlow(flow, vertices.get(start));
+	}//End maxFlow method
+	
+	public LinkedList<Edge> getPath(Object start,Object end) {
+		start=start.toString();
+		end=end.toString();
+		HashMap<Edge,Integer> dummyFlow = new HashMap<Edge,Integer>();
+		for(Edge e:edges) {
+			dummyFlow.put(e,0);
+		}//End for
+		LinkedList<Edge> path = bfSearch(vertices().get(start),vertices().get(end),dummyFlow);
+		if (path==null) {
+			System.out.println("Sorry there is no path between "+start+" and "+ end);
+			return path;
+		} else {
+		return bfSearch(vertices().get(start),vertices().get(end),dummyFlow);
+		}//End if else
+	}//End getPAth
+	
+	private int maxFlow(HashMap<Edge,Integer> flow, Vertex start) {
 		int maxFlow= 0;
 		for (int i=0;i<start.edges().size();i++) {
+			//System.out.println(flow.get(start.edges().get(i)));
 			maxFlow += flow.get(start.edges().get(i));
 		}//end for
 		return maxFlow;
 	}//End maxFlow method
 	
-	public HashMap<Edge, Integer> getPath(Vertex start,Vertex end){
-	System.out.println(start);
-	System.out.println(end);
+	private HashMap<Edge, Integer> getFlow(Vertex start,Vertex end){
 		LinkedList<Edge> path;//Keeps track of path being followed
 		HashMap<Edge, Integer> flow = new HashMap<Edge,Integer>();//Keeps track of how much capacity has been used
 		//if (start.equals(end)) return path;
 		for(Edge e:edges) {
 			flow.put(e,0);
-	System.out.println("in for");
 		}//End for
-	System.out.println("did for");
 		while ((path = bfSearch(start,end,flow)) != null) {
-			System.out.println(path);
+			//System.out.println(path);
 			int minCapacity = Integer.MAX_VALUE;
 			Vertex lastNode = start;
 	//System.out.println("in while");
@@ -75,15 +95,25 @@ public class Digraph {
 					minCapacity=c;
 				}//end if
 			}//End for
+			lastNode = start;
+			for (Edge edge : path) {
+				if (edge.tail().equals(lastNode)) {
+					flow.put(edge, flow.get(edge) + minCapacity);
+					lastNode = edge.tip();
+				}//End if
+				else {
+					flow.put(edge, flow.get(edge) - minCapacity);
+					lastNode = edge.tail();
+				}//end if else
+			}//End for
+			//System.out.println(flow.get(path.get(0))+" Max flow in path: "+path);
 		}//End while
-	System.out.println("out while");
 		return flow;
 	}//End getPath
 	
-	public LinkedList<Edge> bfSearch(Vertex start,Vertex end, HashMap<Edge,Integer> flow) {
+	private LinkedList<Edge> bfSearch(Vertex start,Vertex end, HashMap<Edge,Integer> flow) {
 		HashMap<Vertex,Edge> parent = new HashMap<Vertex,Edge>();
 		LinkedList<Vertex> siblings = new LinkedList<Vertex>();
-	System.out.println("Search");
 		parent.put(start, null);
 		siblings.add(start);
 		all: while(!siblings.isEmpty()) {
@@ -98,7 +128,7 @@ public class Digraph {
 						}//End if
 						newSibling.add(e.tip());
 					}//End if
-					else if (e.tip().equals(vertexID) && parent.containsKey(e.tail()) && flow.get(e) > 0) {
+					else if (e.tip().equals(vertexID) && !parent.containsKey(e.tail()) && flow.get(e) > 0) {
 						parent.put(e.tail(), e);
 						if (e.tail().equals(end)) {
 							break all;
@@ -109,6 +139,7 @@ public class Digraph {
 			}///End for
 			siblings = newSibling;
 		}//End while
+		
 		if (siblings.isEmpty()) {
 			return null;
 		}//End if
@@ -124,6 +155,7 @@ public class Digraph {
 				node= e.tail();
 			}//End if else
 		}//End while
+		
 		return path;
 	}//End BFSearch
 	
@@ -132,7 +164,7 @@ public class Digraph {
 	}//End getVertacies
 	
 	public String toString() {
-		String s = "";
+		String s = "Graph:\n";
 		 Iterator<Vertex> v = vertices.values().iterator();
 		for(int i=0;i<vertices.size();i++){
 			Vertex vertex=v.next();

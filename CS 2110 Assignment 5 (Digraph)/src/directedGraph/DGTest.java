@@ -1,4 +1,4 @@
-//1 2 3; 2 3 4; 8 9 1; 8 2 2;
+//Test String
 //1 2 3; 1 3 3; 2 3 2; 2 4 3; 3 5 2; 4 5 4; 5 6 3; 4 6 2;
 //Flow 5
 
@@ -38,7 +38,7 @@ public class DGTest {
 		
 		String[][] edges = inputCleaner(input);
 		
-		System.out.println(Arrays.deepToString(edges));
+		//System.out.println(Arrays.deepToString(edges));
 		
 		
 		//Graph creation
@@ -53,9 +53,9 @@ public class DGTest {
 		
 		System.out.println(g);
 		
-		HashMap<Edge,Integer> flow = g.getPath(g.vertices().get("1"),g.vertices().get("6"));
-		System.out.println(flow);
-		//System.out.println(g.maxFlow(flow, g.vertices().get("1")));
+		System.out.println("Max Flow: " + g.maxFlow(1, 6));
+		
+		System.out.println("Shortest Path: "+g.getPath(1, 6));
 		
 	}//End Main method
 	
@@ -109,11 +109,11 @@ public class DGTest {
 				for (int i = 0;i<connections.length;i++) {
 				//spaces are used to find numbers and their input is cleaned further	
 					String edge =connections[i];
-					System.out.println("This is a numberSet before split " + edge);
+					//System.out.println("This is a numberSet before split " + edge);
 					
 				//Closes Program if no input is entered
 					if (edge.isEmpty()) {
-						System.out.println("I just read an empty set so there no statistics.");
+						//System.out.println("I just read an empty set so there no statistics.");
 					}//Close if
 					
 					else {

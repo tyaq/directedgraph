@@ -1,0 +1,5 @@
+This DAG can takes three consecutive numbers before any character and creates an directed edge with them.
+You can use Ford-Fulkerson Algorithm to find max flow bwtween points, using g.maxFlow().
+You can find the shortest path between points using g.getPath(Vertex 1,Vertex 2).
+
+This code is not well documented.
