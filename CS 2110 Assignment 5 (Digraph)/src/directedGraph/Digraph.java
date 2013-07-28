@@ -301,8 +301,8 @@ public class Digraph {
 			else {
 				more.add(e);
 			}//End else
-			return addLists(quickSort(less),quickSort(more));
 		}//end for
+		return (addLists(quickSort(less),quickSort(more)));
 	}//End method
 	
 	private LinkedList<Edge> addLists(LinkedList<Edge> one, LinkedList<Edge> two) {
