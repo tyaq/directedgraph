@@ -2,9 +2,12 @@ package directedGraph;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Set;
 
 public class Digraph {
 
@@ -71,6 +74,23 @@ public class Digraph {
 		
 		//Enter parsed data into data structures
 		Edge e = new Edge(tail,tip,weight,p);//Create new edge
+		edges.add(e);
+	}//End addEdge
+	
+	/**
+	 * Adds an edge to the graph.
+	 * If the vertices being connected are not in the graph already
+	 * then create them and add them.
+	 * 
+	 * @param tail Where an edge starts from
+	 * @param tip Where it goes to
+	 * @param weight The edge's weight
+	 */
+	private void addEdge(Edge edge) {
+		// TODO Auto-generated method stub
+
+		//Enter parsed data into data structures
+		Edge e = edge;
 		edges.add(e);
 	}//End addEdge
 	
@@ -221,6 +241,7 @@ public class Digraph {
 			for(Vertex vertexID : siblings) {
 				for(int i=0;i<vertexID.edges().size();i++){
 					Edge e = vertexID.edges().get(i);
+			
 					if (e.tail().equals(vertexID) && !parent.containsKey(e.tip()) && flow.get(e) < e.weight()) {
 						parent.put(e.tip(), e);
 						if (e.tip().equals(end)) {
@@ -279,30 +300,63 @@ public class Digraph {
 		return undirected;
 	}//end to undirected
 	
-	private void /*Digraph*/ kruskal() {
-		Digraph udg=toUndirected();
+	public Digraph kruskal() {
+		//Digraph udg=toUndirected();
 		
-		LinkedList<Edge> tree =new LinkedList<Edge>();
-		LinkedList<Edge> sorted = quickSort(udg.edges());
-		for (Edge e:sorted) {//Inefficent because of double edges
-			//Work in progress
-		}//End for
-	}
+		LinkedList<Edge> sorted = new LinkedList<Edge>(edges);
+		Collections.sort(sorted);
+		HashMap<String,Vertex> cVertices=new HashMap<String,Vertex>(vertices);
+		HashMap<Vertex,Set<Vertex>> forest = new HashMap<Vertex,Set<Vertex>>();
+		
+		for (Vertex v:cVertices.values()) {
+			Set<Vertex> vs = new HashSet<Vertex>();
+			vs.add(v);
+			forest.put(v, vs);
+		}//Populate forest
+		
+		Digraph mst = new Digraph(cVertices,new LinkedList<Edge>());
+		
+		while(true) {
+			Edge temp=sorted.remove(0);
+			
+			Set<Vertex> visted1 = forest.get(temp.tail());
+			Set<Vertex> visted2 = forest.get(temp.tip());
+			if (visted1.equals(visted2)){
+				continue;
+			}//End if
+			mst.addEdge(temp);
+			visted1.addAll(visted2);
+			for (Vertex v:visted1) {
+				forest.put(v, visted1);
+			}//End for
+			if (visted1.size()==cVertices.size()) {
+				break;
+			}//End if
+		}//End While
+		return mst;
+	}//End Kruskal
 	
 	private LinkedList<Edge> quickSort(LinkedList<Edge> list){
 		int pivot = list.size()/2;
+		System.out.println(pivot);
 		LinkedList<Edge> less,more;
 		less=new LinkedList<Edge>();
 		more=new LinkedList<Edge>();
+		if (list.size()==1) {
+			return list;
+		}
 		for(Edge e:edges) {
-			if (e.weight()<list.get(pivot).weight()) {
+			if (e.compareTo(list.get(pivot))<0) {
 				less.add(e);
 			}//End if
 			else {
 				more.add(e);
 			}//End else
 		}//end for
-		return (addLists(quickSort(less),quickSort(more)));
+		less= quickSort(less);
+		more=quickSort(more);
+		list=addLists(less,more);
+		return list;
 	}//End method
 	
 	private LinkedList<Edge> addLists(LinkedList<Edge> one, LinkedList<Edge> two) {

@@ -1,6 +1,6 @@
 package directedGraph;
 
-public class Edge {
+public class Edge implements Comparable<Object>{
 
 	private int weight;//Edge Weight
 	private Vertex tail;//Start
@@ -22,6 +22,13 @@ public class Edge {
 		//If you wanted undirected graph you could create an opposite edge and tell the tip about it.
 	}//End Constructor
 	
+	public int compareTo(Object o) {
+        Edge e1 = (Edge)o;
+        if(e1.weight==this.weight)
+            return 0;
+        return e1.weight < this.weight ? 1 : -1;
+    }//End Compare
+	
 	public void setWeight(int w){
 		weight=w;
 	}//End setWeight
@@ -37,6 +44,10 @@ public class Edge {
 	public Vertex tail(){
 		return tail;
 	}
+	
+	public Edge pair(){
+		return pair;
+	}//end getPair
 	
 	public String toString(){
 		return "["+tail+"->"+tip+" Weight:"+weight+"]";
