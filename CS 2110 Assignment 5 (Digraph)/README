@@ -1,6 +1,7 @@
 This DAG can takes three consecutive numbers before any character and creates an directed edge with them.
 You can use Ford-Fulkerson Algorithm to find max flow between points, using g.maxFlow().
 You can find the shortest path between points using g.getPath(Vertex 1,Vertex 2).
+You can find the MinSpanTree using Kruskal algo, using g.kruskal().edges().
 And how many vertices with g.size();
 
 We were working on Kruskal, Prim and dijkstra algos
