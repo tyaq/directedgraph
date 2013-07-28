@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class Vertex {
 
-	private String data;
-	private ArrayList<Edge> edges;
+	private String data;//Holds that actual data, does not need to be String Could have been generic
+	private ArrayList<Edge> edges;//Adjacency List
 	
 	public Vertex(String d){
 		data=d;
