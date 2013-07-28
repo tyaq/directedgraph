@@ -301,7 +301,7 @@ public class Digraph {
 			else {
 				more.add(e);
 			}//End else
-			return addLists(quickSort(less),quickSort(more);
+			return addLists(quickSort(less),quickSort(more));
 		}//end for
 	}//End method
 	
