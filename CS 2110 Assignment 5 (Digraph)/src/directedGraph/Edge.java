@@ -49,6 +49,13 @@ public class Edge implements Comparable<Object>{
 		return pair;
 	}//end getPair
 	
+	public Edge find(Vertex ta){
+		if (tail==ta) {
+			return this;
+		}//end if
+		return null;
+		
+	}
 	public String toString(){
 		return "["+tail+"->"+tip+" Weight:"+weight+"]";
 	}

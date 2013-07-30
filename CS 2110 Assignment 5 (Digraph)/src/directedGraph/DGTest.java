@@ -55,11 +55,11 @@ public class DGTest {
 		
 		//System.out.println(g.kruskal().edges());
 		
-		System.out.println("Max Flow: " + g.maxFlow(1, 6));
+		System.out.println("Max Flow: " + g.maxFlow(1, 4));
 		
 		System.out.println("MinSpanTree: "+g.kruskal().edges());
 		
-		System.out.println("Shortest Path from 1 to 6: "+g.getPath(1, 6));
+		System.out.println("Shortest Path from 1 to 4: "+g.getPath(1, 4));
 		
 	}//End Main method
 	

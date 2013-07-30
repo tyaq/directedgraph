@@ -319,8 +319,12 @@ public class Digraph {
 		while(true) {
 			Edge temp=sorted.remove(0);
 			
+			System.out.println("Visted1: "+temp.tail());
+			System.out.println("Visted2: "+temp.tip());
 			Set<Vertex> visted1 = forest.get(temp.tail());
 			Set<Vertex> visted2 = forest.get(temp.tip());
+			System.out.println("equals: "+(visted1.equals(visted2)));
+			System.out.println(cVertices.size()+" Visted: "+visted1.size());
 			if (visted1.equals(visted2)){
 				continue;
 			}//End if
